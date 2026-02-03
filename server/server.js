@@ -10,5 +10,5 @@ dotenv.config()
 
     
 const db = new pg.Pool({
-    connectionString: process.env.DB_CONN ///////////////
+    connectionString: process.env.DB_CONN
 })
