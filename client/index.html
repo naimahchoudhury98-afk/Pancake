@@ -1,23 +1,22 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script type="module" src="/src/main.js">defer</script>
-    <title>client</title>
+    <script type="module" src="./src/main.js" defer></script>
+    
+    <title>The Final - Home</title>
   </head>
-<body>
-    <div id="app"></div>
-
+  <body>
     <main class="game-container">
       <section id="start-page" class="screen">
         <h1>The Final</h1>
         <p>Welcome to the ultimate challenge. Answer all questions correctly to win.</p>
         <p>You have 5 lives and 2 lifelines to help you along the way. Good luck!</p>
 
-        <form id="leaderboard">
+        <form id="leaderboard-form">
           <div class="form-group">
             <label for="player-name">Player Name:</label>
             <input
@@ -28,93 +27,16 @@
               required
             />
           </div>
+          <button type="submit" id="play-btn" class="pixel-button">PLAY</button>
         </form>
-
-        <button id="play-btn" type="button">Play</button>
       </section>
 
-      <section id="screen-quiz" hidden>
-        <header id="quiz-header">
-          <p>
-            Question <span id="question-number">1</span> of
-            <span id="total-questions">20</span>
-          </p>
-          <p>Score: <span id="score">0</span></p>
-        </header>
+      <hr />
 
-        <nav id="lifelines" aria-label="Lifelines">
-          <button id="lifeline-fiftyfifty" type="button">50/50</button>
-          <button id="lifeline-free" type="button">Free Pass</button>
-        </nav>
-
-        <article id="question-card">
-          <h2 id="question-text">Question text goes here</h2>
-          <div id="answers" role="group" aria-label="Answer choices"></div>
-        </article>
-
-      </section>
-
-      <section id="game-win" hidden>
-        <h2 id="win">You win!</h2>
-        <p>You've earned a badge</p>
-      </section>
-
-      <section id="ending" hidden>
-        <h2 id="lost">Game over</h2>
-        <p>Thank you for playing</p>
+      <section id="leaderboard-display">
+        <h2>Hall of Fame</h2>
+        <div id="app">Loading leaderboard...</div>
       </section>
     </main>
   </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
