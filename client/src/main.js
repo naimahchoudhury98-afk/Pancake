@@ -1,9 +1,9 @@
 const display = document.getElementById('app')
 const form = document.getElementById('form')
-const baseURL = ''
+const baseURL = 'http://localhost:1000'
 
 async function fetchData() {
-  const response = await fetch(`${baseURL}/messages`)
+  const response = await fetch(`${baseURL}/leaderboard`)
   const messages = await response.json()
 
   console.log(messages)
@@ -11,7 +11,7 @@ async function fetchData() {
   return messages
 }
 
-async function displayMessages() {
+async function displayLeaderboard() {
   const messages = await fetchData()
 
   messages.forEach((message) => {
@@ -19,15 +19,15 @@ async function displayMessages() {
     const userName = document.createElement('p')
     const messageContent = document.createElement('p')
 
-    userName.textContent = message.msg_name
-    messageContent.textContent = message.content
+    userName.textContent = leaderboard.username
+    messageContent.textContent = leaderboard.score
 
     div.append(userName, messageContent)
 
     display.appendChild(div)
   })
 }
-displayMessages()
+displayLeaderboard()
 
 
 async function handleSubmit(event) {
@@ -38,7 +38,7 @@ async function handleSubmit(event) {
   const userInputJSON = JSON.stringify(userInput)
 
 
-  const response = await fetch(`${baseURL}/messages`, {
+  const response = await fetch(`${baseURL}/leaderboard`, {
     headers: {
       "Content-Type" : "application/json"
     },
