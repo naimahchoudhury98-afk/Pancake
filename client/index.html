@@ -58,6 +58,30 @@
   <p>Thank you for playing</p>
 </section>
 
+<div id="start-page" class="screen active">
+    <h1>The Final</h1>
+    <button onclick="showScreen('leaderboard-screen')">Leaderboard</button>
+</div>
+
+<section id="ending" hidden>
+  <header id="lost">Game Over</header>
+  <p>Thank you for playing!</p>
+</section>
+
+<section id="leaderboard-screen">
+  <h2>Leaderboard</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Score</th>
+      </tr>
+    </thead>
+    <tbody id="leaderboard-rows">
+      </tbody>
+  </table>
+</section>
+
   </body>
 </html>
 
