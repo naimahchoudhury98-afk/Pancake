@@ -23,14 +23,17 @@ app.get('/leaderboard', async (req, res) => {
     res.status(200).json(leaderboard)
 })
 
-app.post('/leaderboard', async (req, res) => {
-    const userData = req.body
-})
+app.post("/leaderboard", async (req, res) => {
+  const userData = req.body;
 
- const dbQuery = await db.query(`INSERT INTO leaderboard (username, score) VALUES ($1, $2)`, [userData.username, userData.score])
+  await db.query(
+    "INSERT INTO leaderboard (username, score) VALUES ($1, $2)",
+    [userData.username, userData.score]
+  );
 
-    res.status(200).json({message: "scores added"})
+  res.status(201).json({ message: "scores added" });
+});
 
-app.listen(1000, () => {
-    console.log(`Server started on port http://localhost:1000`)
+app.listen(8080, () => {
+    console.log(`Server started on port http://localhost:8080`)
 })
