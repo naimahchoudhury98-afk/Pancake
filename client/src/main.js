@@ -1,4 +1,4 @@
-const baseURL = 'http://localhost:8080';
+const baseURL = 'https://pancake-tx1r.onrender.com/';
 const triviaURL = 'https://opentdb.com/api.php?amount=20&category=9&difficulty=medium&type=multiple';
 
 let questions = [];
