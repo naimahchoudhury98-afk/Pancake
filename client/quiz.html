@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <script type="module" src="/src/main.js" defer></script>
+    <script type="module" src="./src/main.js" defer></script>
     <title>The Final - Quiz</title>
   </head>
   <body>
@@ -19,38 +19,33 @@
             </p>
             <p>Score: <span id="score">0</span></p>
           </div>
-
           <div id="lives-container">
             Lives: <span id="lives-display" class="heart">♥♥♥♥♥</span>
           </div>
         </header>
 
         <nav id="lifelines" aria-label="Lifelines">
-          <button id="lifeline-fiftyfifty" class="pixel-button small" type="button">
-            50/50
-          </button>
-          <button id="lifeline-free" class="pixel-button small" type="button">
-            Free Pass
-          </button>
+          <button id="lifeline-fiftyfifty" class="pixel-button small" type="button">50/50</button>
+          <button id="lifeline-free" class="pixel-button small" type="button">Free Pass</button>
         </nav>
 
         <article id="question-card" class="pixel-box">
           <h2 id="question-text">Fetching questions...</h2>
-
-          <div id="answers" class="answers-grid" role="group" aria-label="Answer choices">
-          </div>
+          <div id="answers" class="answers-grid" role="group" aria-label="Answer choices"></div>
         </article>
       </section>
 
       <section id="game-win" class="screen" style="display: none;">
         <h2>You Win!</h2>
         <p>You've earned the Ultimate Badge.</p>
+        <div id="leaderboard-win" class="leaderboard-section"></div>
         <button id="submit-score-win" class="pixel-button">Submit Score</button>
       </section>
 
       <section id="ending" class="screen" style="display: none;">
         <h2>Game Over</h2>
         <p>Your journey ends here.</p>
+        <div id="leaderboard-lose" class="leaderboard-section"></div>
         <button id="submit-score-lose" class="pixel-button">Back to Menu</button>
       </section>
     </main>
