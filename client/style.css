@@ -1,10 +1,13 @@
-/* --- Retro 70s / Black Mirror Theme (Centralized) --- */
 @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
 
 :root {
-  --crt-green: #00ff41;
-  --crt-dark: #0a0a0a;
-  --crt-glow: rgba(0, 255, 65, 0.2);
+  --crt-green: #2babf5;
+  --crt-dark: #000000;
+  --crt-glow: rgba(244, 3, 3, 0.959);
+}
+
+#player-name {
+  color: #fff;
 }
 
 body {
@@ -14,14 +17,13 @@ body {
   text-transform: uppercase;
   margin: 0;
   display: flex;
-  justify-content: center; /* Horizontal Center */
-  align-items: center;     /* Vertical Center */
+  justify-content: center; 
+  align-items: center;
   min-height: 100vh;
   overflow: hidden;
-  text-align: center;      /* Centralize all text */
+  text-align: center; 
 }
 
-/* Scanline Effect */
 body::before {
   content: " ";
   display: block;
@@ -43,15 +45,16 @@ body::before {
   box-shadow: 0 0 20px var(--crt-glow);
   display: flex;
   flex-direction: column;
-  align-items: center; /* Centers children horizontally */
+  align-items: center;
 }
 
-/* Typography */
+
 h1 {
   font-size: 4rem;
   margin-bottom: 10px;
   width: 100%;
 }
+
 
 p {
   font-size: 1.6rem;
@@ -59,7 +62,6 @@ p {
   margin: 10px auto;
 }
 
-/* Centered Form & Input */
 #leaderboard {
   width: 100%;
   margin: 20px 0;
@@ -76,18 +78,17 @@ input[type="text"] {
   max-width: 300px;
   outline: none;
   padding: 5px;
-  text-align: center; /* Centralizes the typed name */
+  text-align: center;
 }
 
 input::placeholder {
-  color: rgba(0, 255, 65, 0.3);
+  color: #ffffff;
 }
 
-/* Quiz UI Alignment */
 #quiz-header {
   width: 100%;
   display: flex;
-  justify-content: space-around; /* Distributes score and question number evenly */
+  justify-content: space-around; 
   border-bottom: 2px solid var(--crt-green);
   margin-bottom: 30px;
   padding-bottom: 10px;
@@ -108,10 +109,9 @@ input::placeholder {
   gap: 15px;
 }
 
-/* Buttons */
 button {
   background: transparent;
-  color: var(--crt-green);
+  color: #ffffff;
   border: 2px solid var(--crt-green);
   font-family: 'VT323', monospace;
   font-size: 1.6rem;
@@ -127,7 +127,6 @@ button:hover {
   color: var(--crt-dark);
 }
 
-/* Screen Flicker Animation */
 @keyframes flicker {
   0% { opacity: 0.98; }
   5% { opacity: 0.95; }
