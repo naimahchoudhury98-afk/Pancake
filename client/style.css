@@ -164,3 +164,7 @@ button:hover {
   cursor: not-allowed;
 }
 
+@media  (min-width: 800px) {
+  .thumbnail-container {
+    top: 10vh; }
+  }
