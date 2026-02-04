@@ -56,9 +56,16 @@ async function fetchTrivia() {
 function loadQuestion() {
   const questionText = document.getElementById('question-text');
   const answerContainer = document.getElementById('answers');
+  const questionNumberEl = document.getElementById('question-number')
+
   const currentQ = questions[gameState.currentIdx];
 
   if (!questionText || !answerContainer || !currentQ) return;
+
+    if (questionNumberEl) {
+    questionNumberEl.innerText = 
+      `${gameState.currentIdx + 1} of ${questions.length}`;
+  }
 
   questionText.innerText = currentQ.q;
   answerContainer.innerHTML = '';
