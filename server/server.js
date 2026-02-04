@@ -1,9 +1,18 @@
 import express from "express";
 import cors from "cors";
+import dotenv from "dotenv";
+import pg from "pg"
 
+
+dotenv.config()
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+const db = new pg.Pool({
+    connectionString: process.env.DB_CONN
+})
+
 
 const PORT = 8080;
 
@@ -17,8 +26,10 @@ app.get("/", (req, res) => {
 });
 
 
-app.get("/leaderboard", (req, res) => {
+app.get("/leaderboard", async (req, res) => {
   const sorted = [...leaderboard].sort((a, b) => b.score - a.score);
+   const data = await db.query(`SELECT * FROM messages`);
+    const leaderboard = data.rows
   res.status(200).json(sorted);
 });
 
@@ -49,6 +60,8 @@ app.delete("/leaderboard", (req, res) => {
   leaderboard = [];
   res.status(200).json({ message: "Leaderboard cleared" });
 });
+
+    const dbQuery = await db.query(`INSERT INTO messages (username,score) VALUES ($1, $2)`, [userData.username, userData.score])
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
