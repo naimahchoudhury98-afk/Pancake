@@ -83,6 +83,19 @@ async function displayLeaderboard(container) {
   ).join('');
 }
 
+function ensureFinalStats(screenEl) {
+  const username = localStorage.getItem('currentPlayer') || 'Guest';
+
+  let stats = screenEl.querySelector('#final-stats');
+  if (!stats) {
+    stats = document.createElement('p');
+    stats.id = 'final-stats';
+    screenEl.appendChild(stats);
+  }
+
+  stats.innerText = `Player: ${username} | Score: ${gameState.score}`;
+}
+
 function showEndScreen(screenId) {
   document.getElementById('screen-quiz').style.display = 'none';
   document.getElementById(screenId).style.display = 'block';
