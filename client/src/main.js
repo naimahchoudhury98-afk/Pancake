@@ -11,21 +11,16 @@ let gameState = {
 document.addEventListener('DOMContentLoaded', () => {
   const loginForm = document.getElementById('leaderboard-form');
   const quizPage = document.getElementById('screen-quiz');
-  const appDisplay = document.getElementById('app');
 
   if (loginForm) {
-    displayLeaderboard(appDisplay);
-    
     loginForm.addEventListener('submit', (event) => {
-      event.preventDefault(); 
-      
+      event.preventDefault();
+
       const nameInput = document.getElementById('player-name');
-      const playerName = nameInput ? nameInput.value : 'Guest';
-      
+      const playerName = nameInput?.value || 'Guest';
+
       localStorage.setItem('currentPlayer', playerName);
-      
-      console.log("Redirecting...");
-      window.location.assign('./quiz.html'); 
+      window.location.assign('./quiz.html');
     });
   }
 
@@ -39,12 +34,12 @@ async function fetchTrivia() {
   try {
     const response = await fetch(triviaURL);
     const data = await response.json();
-    
+
     questions = data.results.map((item) => {
       const allAnswers = [...item.incorrect_answers];
       const correctIdx = Math.floor(Math.random() * 4);
       allAnswers.splice(correctIdx, 0, item.correct_answer);
-      
+
       return {
         q: decodeHTML(item.question),
         a: allAnswers.map(ans => decodeHTML(ans)),
@@ -79,18 +74,22 @@ function loadQuestion() {
 
 function checkAnswer(index) {
   const currentQ = questions[gameState.currentIdx];
+
   if (index === currentQ.correct) {
     gameState.score += 100;
-    document.getElementById('score').innerText = gameState.score;
+    const scoreEl = document.getElementById('score');
+    if (scoreEl) scoreEl.innerText = gameState.score;
   } else {
     gameState.lives--;
     updateLivesUI();
   }
+
   nextStep();
 }
 
 function nextStep() {
   gameState.currentIdx++;
+
   if (gameState.lives <= 0) {
     showEndScreen('ending');
   } else if (gameState.currentIdx >= questions.length) {
@@ -112,31 +111,87 @@ function decodeHTML(html) {
 }
 
 async function displayLeaderboard(container) {
-  if (!container) return;
+  if (!container) {
+    console.log("Leaderboard container not found on this screen");
+    return;
+  }
+
   try {
     const res = await fetch(`${baseURL}/leaderboard`);
+
+    if (!res.ok) {
+      const text = await res.text();
+      console.log("Leaderboard fetch failed:", res.status, text);
+      container.innerText = "Leaderboard error";
+      return;
+    }
+
     const data = await res.json();
-    container.innerHTML = data.map(entry => 
+
+    container.innerHTML = data.map(entry =>
       `<div class="entry"><strong>${entry.username}</strong>: ${entry.score}</div>`
     ).join('');
   } catch (err) {
+    console.log("Leaderboard error:", err);
     container.innerText = "Leaderboard Offline";
   }
 }
 
+function ensureFinalStats(screenEl) {
+  const username = localStorage.getItem('currentPlayer') || 'Guest';
+
+  let stats = screenEl.querySelector('#final-stats');
+  if (!stats) {
+    stats = document.createElement('p');
+    stats.id = 'final-stats';
+    screenEl.appendChild(stats);
+  }
+
+  stats.innerText = `Player: ${username} | Score: ${gameState.score}`;
+}
+
 function showEndScreen(screenId) {
-  document.getElementById('screen-quiz').style.display = 'none';
-  document.getElementById(screenId).style.display = 'block';
-  const btnId = screenId === 'game-win' ? 'submit-score-win' : 'submit-score-lose';
-  document.getElementById(btnId).onclick = submitScore;
+  document.getElementById("screen-quiz").style.display = "none";
+  const screen = document.getElementById(screenId);
+  screen.style.display = "block";
+
+  ensureFinalStats(screen);
+
+  const btnId = screenId === "game-win" ? "submit-score-win" : "submit-score-lose";
+  const btn = document.getElementById(btnId);
+
+  if (btn) {
+    btn.onclick = async () => {
+      await submitScore(); 
+      if (screenId === "game-win") displayLeaderboard(document.getElementById("app-win"));
+      if (screenId === "ending") displayLeaderboard(document.getElementById("app-lose"));
+
+      window.location.assign('index.html');
+    };
+  }
+
+  if (screenId === "game-win") {
+    displayLeaderboard(document.getElementById("app-win"));
+  } else if (screenId === "ending") {
+    displayLeaderboard(document.getElementById("app-lose"));
+  }
 }
 
 async function submitScore() {
   const username = localStorage.getItem('currentPlayer') || 'Guest';
-  await fetch(`${baseURL}/leaderboard`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, score: gameState.score })
-  });
-  window.location.assign('index.html');
+
+  try {
+    const res = await fetch(`${baseURL}/leaderboard`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, score: gameState.score })
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      console.log("Submit score failed:", res.status, text);
+    }
+  } catch (err) {
+    console.log("Submit score error:", err);
+  }
 }
