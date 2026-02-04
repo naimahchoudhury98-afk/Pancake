@@ -5,9 +5,9 @@ let questions = [];
 let gameState = {
   currentIdx: 0,
   score: 0,
-  lives: 5
+  lives: 5,
+  freePassUsed: false
 };
-
 document.addEventListener('DOMContentLoaded', () => {
   const loginForm = document.getElementById('leaderboard-form');
   const quizPage = document.getElementById('screen-quiz');
@@ -27,6 +27,11 @@ document.addEventListener('DOMContentLoaded', () => {
   if (quizPage) {
     fetchTrivia();
     updateLivesUI();
+    const freePassBtn = document.getElementById("lifeline-free");
+if (freePassBtn) {
+  freePassBtn.addEventListener("click", useFreePass);
+}
+
   }
 });
 
@@ -94,6 +99,24 @@ function lockAnswersAndShowFeedback(selectedIndex) {
       btn.classList.add("wrong");
     }
   });
+}
+
+function useFreePass() {
+  if (gameState.freePassUsed) return;
+
+  gameState.freePassUsed = true;
+
+  const freeBtn = document.getElementById("lifeline-free");
+  if (freeBtn) freeBtn.disabled = true;
+
+  
+  gameState.currentIdx++;
+
+  if (gameState.currentIdx >= questions.length) {
+    showEndScreen("game-win");
+  } else {
+    loadQuestion();
+  }
 }
 
 
