@@ -1,67 +1,73 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import pg from "pg"
+import pg from "pg";
 
+dotenv.config();
 
-dotenv.config()
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 const db = new pg.Pool({
-    connectionString: process.env.DB_CONN
-})
-
+  connectionString: process.env.DB_CONN
+});
 
 const PORT = 8080;
-
-let leaderboard = [
-  { username: "RetroKing", score: 1500 },
-  { username: "PixelQueen", score: 1200 }
-];
 
 app.get("/", (req, res) => {
   res.send("Quiz server is running");
 });
 
-
 app.get("/leaderboard", async (req, res) => {
-  const sorted = [...leaderboard].sort((a, b) => b.score - a.score);
-   const data = await db.query(`SELECT * FROM messages`);
-    const leaderboard = data.rows
-  res.status(200).json(sorted);
-});
+  try {
+    const result = await db.query(
+      `SELECT username, score
+       FROM leaderboard
+       ORDER BY score DESC
+       LIMIT 10`
+    );
 
-app.post("/leaderboard", (req, res) => {
-  const { username, score } = req.body;
-
-  if (!username || score === undefined) {
-    return res.status(400).json({ error: "Missing username or score" });
+    res.status(200).json(result.rows);
+  } catch (err) {
+    console.error("GET /leaderboard error:", err);
+    res.status(500).json({ error: "Failed to fetch leaderboard" });
   }
+});
 
-  const entry = {
-    username: String(username),
-    score: Number(score)
-  };
+app.post("/leaderboard", async (req, res) => {
+  try {
+    const { username, score } = req.body;
 
-  if (Number.isNaN(entry.score)) {
-    return res.status(400).json({ error: "Score must be a number" });
+    if (!username || score === undefined) {
+      return res.status(400).json({ error: "Missing username or score" });
+    }
+
+    const cleanUsername = String(username).trim();
+    const cleanScore = Number(score);
+
+    if (!cleanUsername) {
+      return res.status(400).json({ error: "Username cannot be empty" });
+    }
+
+    if (Number.isNaN(cleanScore)) {
+      return res.status(400).json({ error: "Score must be a number" });
+    }
+
+    const result = await db.query(
+      `INSERT INTO leaderboard (username, score)
+       VALUES ($1, $2)
+       RETURNING username, score`,
+      [cleanUsername, cleanScore]
+    );
+
+    console.log(`New score saved: ${cleanUsername} - ${cleanScore}`);
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    console.error("POST /leaderboard error:", err);
+    res.status(500).json({ error: "Failed to save score" });
   }
-
-  leaderboard.push(entry);
-
-  console.log(`New score saved: ${entry.username} - ${entry.score}`);
-  res.status(201).json(entry);
 });
-
-
-app.delete("/leaderboard", (req, res) => {
-  leaderboard = [];
-  res.status(200).json({ message: "Leaderboard cleared" });
-});
-
-    const dbQuery = await db.query(`INSERT INTO messages (username,score) VALUES ($1, $2)`, [userData.username, userData.score])
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
