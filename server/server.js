@@ -1,39 +1,55 @@
-import express from "express"
-import cors from "cors"
-import dotenv from "dotenv"
-import pg from "pg"
-    
-const app = express()
-app.use(express.json())
-app.use(cors())
-dotenv.config()
+import express from "express";
+import cors from "cors";
 
-    
-const db = new pg.Pool({
-    connectionString: process.env.DB_CONN
-})
+const app = express();
+app.use(cors());
+app.use(express.json());
 
-app.get('/', (req, res) => {
-    res.send('Connected')
-})
+const PORT = 8080;
 
-app.get('/leaderboard', async (req, res) => {
-    const data = await db.query(`SELECT * FROM leaderboard`)
-    const leaderboard = data.rows
-    res.status(200).json(leaderboard)
-})
+let leaderboard = [
+  { username: "RetroKing", score: 1500 },
+  { username: "PixelQueen", score: 1200 }
+];
 
-app.post("/leaderboard", async (req, res) => {
-  const userData = req.body;
-
-  await db.query(
-    "INSERT INTO leaderboard (username, score) VALUES ($1, $2)",
-    [userData.username, userData.score]
-  );
-
-  res.status(201).json({ message: "scores added" });
+app.get("/", (req, res) => {
+  res.send("Quiz server is running");
 });
 
-app.listen(8080, () => {
-    console.log(`Server started on port http://localhost:8080`)
-})
+
+app.get("/leaderboard", (req, res) => {
+  const sorted = [...leaderboard].sort((a, b) => b.score - a.score);
+  res.status(200).json(sorted);
+});
+
+app.post("/leaderboard", (req, res) => {
+  const { username, score } = req.body;
+
+  if (!username || score === undefined) {
+    return res.status(400).json({ error: "Missing username or score" });
+  }
+
+  const entry = {
+    username: String(username),
+    score: Number(score)
+  };
+
+  if (Number.isNaN(entry.score)) {
+    return res.status(400).json({ error: "Score must be a number" });
+  }
+
+  leaderboard.push(entry);
+
+  console.log(`New score saved: ${entry.username} - ${entry.score}`);
+  res.status(201).json(entry);
+});
+
+
+app.delete("/leaderboard", (req, res) => {
+  leaderboard = [];
+  res.status(200).json({ message: "Leaderboard cleared" });
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
+});
