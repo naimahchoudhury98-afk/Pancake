@@ -72,8 +72,28 @@ function loadQuestion() {
   });
 }
 
+function lockAnswersAndShowFeedback(selectedIndex) {
+  const currentQ = questions[gameState.currentIdx];
+  const buttons = document.querySelectorAll(".answer-btn");
+
+  buttons.forEach((btn, idx) => {
+    btn.disabled = true;
+
+    if (idx === currentQ.correct) {
+      btn.classList.add("correct");
+    }
+
+    if (idx === selectedIndex && selectedIndex !== currentQ.correct) {
+      btn.classList.add("wrong");
+    }
+  });
+}
+
+
 function checkAnswer(index) {
   const currentQ = questions[gameState.currentIdx];
+
+  lockAnswersAndShowFeedback(index);
 
   if (index === currentQ.correct) {
     gameState.score += 100;
@@ -84,8 +104,11 @@ function checkAnswer(index) {
     updateLivesUI();
   }
 
-  nextStep();
+  setTimeout(() => {
+    nextStep();
+  }, 1000);
 }
+
 
 function nextStep() {
   gameState.currentIdx++;
