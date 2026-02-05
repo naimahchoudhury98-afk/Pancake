@@ -13,6 +13,23 @@ const db = new pg.Pool({
   connectionString: process.env.DB_CONN
 });
 
+async function initDB() {
+  try {
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS leaderboard (
+        id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+        username TEXT NOT NULL,
+        score INT NOT NULL
+      );
+    `);
+    console.log("Leaderboard table ready");
+  } catch (err) {
+    console.error("DB init error:", err);
+  }
+}
+
+initDB();
+
 const PORT = 8080;
 
 app.get("/", (req, res) => {
@@ -27,6 +44,8 @@ app.get("/leaderboard", async (req, res) => {
        ORDER BY score DESC
        LIMIT 10`
     );
+
+
 
     res.status(200).json(result.rows);
   } catch (err) {
