@@ -10,19 +10,34 @@ let gameState = {
   fiftyFiftyUsed: false
 };
 
+function showScreen(id) {
+  document.querySelectorAll(".screen").forEach(screen => {
+    screen.style.display = "none";
+  });
+
+  const target = document.getElementById(id);
+  if (target) target.style.display = "block";
+}
+
+
 document.addEventListener('DOMContentLoaded', () => {
   const loginForm = document.getElementById('leaderboard-form');
   const quizPage = document.getElementById('screen-quiz');
 
-  if (loginForm) {
-    loginForm.addEventListener('submit', (event) => {
-      event.preventDefault();
-      const nameInput = document.getElementById('player-name');
-      const playerName = nameInput?.value || 'Guest';
-      localStorage.setItem('currentPlayer', playerName);
-      window.location.assign('./quiz.html');
-    });
-  }
+ if (loginForm) {
+  loginForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const nameInput = document.getElementById('player-name');
+    const playerName = nameInput?.value || 'Guest';
+    localStorage.setItem('currentPlayer', playerName);
+
+    showScreen("screen-quiz");
+    fetchTrivia();
+    updateLivesUI();
+  });
+}
+
 
   if (quizPage) {
     fetchTrivia();
@@ -125,7 +140,6 @@ function useFreePass() {
     freeBtn.style.opacity = "0.5";
   }
   
-  // Use the same logic as answering correctly to move forward
   nextStep();
 }
 

@@ -11,28 +11,80 @@
   </head>
   <body>
     <main class="game-container">
+
       <section id="start-page" class="screen">
-        <h1>The Final</h1>
-        <p>Welcome to the ultimate challenge. Answer all questions correctly to win.</p>
-        <p>You have 5 lives and 2 lifelines to help you along the way. Good luck!</p>
+    <h1>The Final</h1>
+    <p>Welcome to the ultimate challenge. Answer all questions correctly to win.</p>
+    <p>You have 5 lives and 2 lifelines to help you along the way. Good luck!</p>
 
-        <form id="leaderboard-form">
-          <div class="form-group">
-            <label for="player-name">Player Name:</label>
-            <input
-              type="text"
-              id="player-name"
-              name="playerName"
-              placeholder="ENTER YOUR NAME"
-              required
-            />
-          </div>
-          <button type="submit" id="play-btn" class="pixel-button">PLAY</button>
-        </form>
-      </section>
+    <form id="leaderboard-form">
+      <div class="form-group">
+        <label for="player-name">Player Name:</label>
+        <input
+          type="text"
+          id="player-name"
+          name="playerName"
+          placeholder="ENTER YOUR NAME"
+          required
+        />
+      </div>
+      <button type="submit" id="play-btn" class="pixel-button">PLAY</button>
+    </form>
+  </section>
 
+  <section id="screen-quiz" class="screen" style="display: none;">
+    <header id="quiz-header">
+      <div class="stats-bar">
+        <p>
+          Question <span id="question-number">1</span>
+          <span id="total-questions"></span>
+        </p>
+        <p>Score: <span id="score">0</span></p>
+      </div>
 
-    
-    </main>
+      <div id="lives-container">
+        Lives: <span id="lives-display" class="heart">♥♥♥♥♥</span>
+      </div>
+    </header>
+
+    <nav id="lifelines" aria-label="Lifelines">
+      <button id="lifeline-fiftyfifty" class="pixel-button small" type="button">
+        50/50
+      </button>
+      <button id="lifeline-free" class="pixel-button small" type="button">
+        Free Pass
+      </button>
+    </nav>
+
+    <article id="question-card" class="pixel-box">
+      <h2 id="question-text">Fetching questions...</h2>
+
+      <div id="answers" class="answers-grid" role="group" aria-label="Answer choices"></div>
+    </article>
+  </section>
+
+  <section id="game-win" class="screen" style="display: none;">
+    <h2>You Win!</h2>
+    <p>You've earned the Ultimate Badge.</p>
+    <button id="submit-score-win" class="pixel-button">Submit Score</button>
+
+    <section id="leaderboard-display-win">
+      <h2>Hall of Fame</h2>
+      <div id="app-win">Loading leaderboard...</div>
+    </section>
+  </section>
+
+  <section id="ending" class="screen" style="display: none;">
+    <h2>Game Over</h2>
+    <p>Your journey ends here.</p>
+    <button id="submit-score-lose" class="pixel-button">Back to Menu</button>
+
+    <section id="leaderboard-display">
+      <h2>Hall of Fame</h2>
+      <div id="app-lose">Loading leaderboard...</div>
+    </section>
+  </section>
+</main>
+
   </body>
 </html>
