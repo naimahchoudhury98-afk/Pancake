@@ -59,6 +59,7 @@ async function fetchTrivia() {
   try {
     const response = await fetch(triviaURL);
     const data = await response.json();
+    console.log(data)
 
     questions = data.results.map((item) => {
       const allAnswers = [...item.incorrect_answers];
@@ -252,12 +253,12 @@ function showEndScreen(screenId) {
 }
 
 async function submitScore() {
-  const username = localStorage.getItem('currentPlayer') || 'Guest';
+  const usernameValue = localStorage.getItem('currentPlayer') || 'Guest';
   try {
     await fetch(`${baseURL}/leaderboard`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, score: gameState.score })
+      body: JSON.stringify({ username: usernameValue, score: gameState.score })
     });
   } catch (err) {
     console.log("Submit score error:", err);
